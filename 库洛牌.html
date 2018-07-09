@@ -1,0 +1,294 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>库洛牌</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        body {
+            background: url("./bg.jpg") no-repeat;
+            background-size: cover;
+        }
+
+        #box {
+            width: 107.5px;
+            height: 237px;
+            background-color: hotpink;
+            position: relative;
+            left: 50%;
+            top: 200px;
+            margin-left: -53.75px;
+            transform-style: preserve-3d;
+            /*设置3d环境*/
+            perspective: 800px;
+            /*设置景深为800px*/
+            transform: rotateX(-10deg);
+            background-color: transparent;
+        }
+
+        #paidui {
+            width: 161px;
+            height: 1800px;
+            position: absolute;
+            right: 5%;
+            top: 5%;
+            transform-style: preserve-3d;
+            /*设置3d环境*/
+            perspective: 800px;
+            /*设置景深为800px*/
+            transform: rotateX(-10deg);
+            background-color:transparent;
+            overflow: hidden;
+        }
+
+        .p1 {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            margin-left: -53.75px;
+            width: 107.5px;
+            height: 237px;
+            -webkit-box-reflect: below 3px -webkit-linear-gradient(top, rgba(0, 0, 0, 0) 70%, rgba(0, 0, 0, 0.5));
+            border-radius: 6px;
+        }
+
+        .p1:hover {
+            position: absolute;
+            left: 50%;
+            top: -20px;
+            margin-left: -53.75px;
+            width: 127.5px;
+            height: 257px;
+            /* transform: scale(2); */
+            -webkit-box-reflect: below 3px -webkit-linear-gradient(top, rgba(0, 0, 0, 0) 70%, rgba(0, 0, 0, 0.5));
+            border-radius: 6px;
+            animation: flicker 2s infinite;
+            filter: brightness(1.25);
+        }
+
+        @keyframes flicker {
+            0%,
+            100% {
+                background: #fefa01;
+                box-shadow: 0 0 1rem #fefa01;
+                filter: brightness(1.1);
+            }
+            /* 30%, 70% {
+                background: #fffd99;
+                box-shadow: -1rem 0 8rem 1rem #fefa01;
+                filter: brightness(1.25);
+            } */
+            50% {
+                box-shadow: -1rem 0 8rem 1rem rgba(254, 250, 1, 0.8);
+                filter: brightness(1.25);
+            }
+        }
+
+        .p2 {
+            position: absolute;
+            left: 50%;
+            margin-left: -53.75px;
+            width: 161px;
+            height: 355px;
+            animation: bubble 3s infinite;
+            transform-style: preserve-3d;
+            perspective: 800px;
+            filter: brightness(1.25);
+            border-radius: 6px;
+        }
+
+        .p3 {
+            width: 161px;
+            height: 355px;
+            /* 355 */
+        }
+
+        .pai {
+            width: 161px;
+            height: 30px;
+            /* 355 */
+            transform-style: preserve-3d;
+            perspective: 800px;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        @keyframes bubble {
+            0%,
+            100% {
+                /* transform: rotateZ(0.5deg) rotateX(10deg) translateX(2px) translateY(1px); */
+                box-shadow: 0 0 1rem #fefa01;
+                filter: brightness(1);
+            }
+
+            50% {
+                /* transform: rotateZ(-0.5deg) rotateX(10deg) translateX(2px) translateY(-1px); */
+                box-shadow: -1rem 0 8rem 1rem rgba(254, 250, 1, 0.8);
+                filter: brightness(1.25);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="box">
+        <video src="./温柔的种子.mp3" loop id="bgm"></video>
+    </div>
+    <div id="paidui"></div>
+</body>
+<script src="./库洛牌.js"></script>
+<script src="./jquery-1.12.4.js"></script>
+<script>
+    clientArea();
+    var bgm = document.getElementById("bgm");
+    bgm.play();
+    var that = null;
+    var box = document.getElementById("box");
+    var arr1 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+    length = arr1.length;
+    for (var x = 0; x < arr1.length; x++) {
+        box.appendChild(document.createElement("img"));
+        var img = box.getElementsByTagName("img");
+        img[x].setAttribute("src", "./库洛牌/" + arr1[x] + ".jpg");
+        img[x].setAttribute("class", "p1");
+        img[x].setAttribute("index", x);
+    }
+    var img = box.getElementsByTagName("img");
+    arr2 = xuanZhuan(box, img, arr1)();
+    var id = arr2[0];
+    var deg = arr2[1];
+    for (var j = 0; j < arr1.length; j++) {
+        box.onmouseenter = function () {
+            clearInterval(id);
+        }
+        box.onmouseleave = function () {
+            clearInterval(id);
+            id = setInterval(function () {
+                for (var i = 0; i < img.length; i++) {
+                    img[i].style = 'transform : rotateY(' + ((deg * i) + ((x++) *0.02)) +
+                        'deg) translateZ(' + img.length * 20 + 'px)'
+                }
+            }, 30);
+        }
+        var num2 = 0
+        box.onmousedown = function (e) {
+            console.log("dianji1");
+            e.stopPropagation();
+            x1 = e.target.offsetWidth;
+            y1 = e.target.offsetHeight;
+            var num = parseInt(e.target.getAttribute("index"));
+            var ele = document.createElement("img");
+            ele.setAttribute("src", "./库洛牌/" + arr1[num] + ".jpg");
+            document.body.appendChild(ele);
+            ele.setAttribute("class", "p2");
+
+            ele.onmousedown = function (e) {
+                clearInterval(id);
+                e.stopPropagation();
+                arr1.splice(num, 1);
+                num2++
+                arr1.push(length + num2);
+                box.innerHTML = "";
+                for (var x = 0; x < arr1.length; x++) {
+                    box.appendChild(document.createElement("img"));
+                    var img = box.getElementsByTagName("img");
+                    img[x].setAttribute("src", "./库洛牌/" + arr1[x] + ".jpg");
+                    img[x].setAttribute("class", "p1");
+                    img[x].setAttribute("index", x);
+                }
+                arr3 = xuanZhuan(box, img, arr1)();
+                id = arr3[0];
+                deg = arr3[1];
+                document.onmousemove = function (e) {
+                    console.log("yidong");
+                    var x = e.pageX;
+                    var y = e.pageY;
+                    ele.style.position = 'absolute';
+                    ele.style.left = x + 'px';
+                    ele.style.top = y - y1 / 2 + 'px';
+                }
+            }
+            ele.onmouseup = function (e) {
+                console.log("tanqi");
+                e.stopPropagation();
+                document.onmousemove = null;
+            }
+        }
+
+    }
+    //................................................
+    var arr = [];
+    document.body.onmousedown = function (e) {
+        clearInterval(id);
+        e = e || window.event;
+        var x1 = e.pageX;
+        var y = e.pageY;
+        document.body.onmousemove = function (e) {
+            clearInterval(id);
+            e = e || window.event;
+            var x2 = e.pageX;
+            var y1 = e.pageY;
+            var y2 = (y1 - y) / 5;
+            var x3 = (x2 - x1) / 10;
+            box.style = "transform:rotateX(" + y2 + "deg)";
+            for (var i = 0; i < img.length; i++) {
+                arr[i] = ((deg * i + x3) + (x * 0.02));
+                img[i].style = 'transform : rotateY(' + ((deg * i + x3) + ((x++) * 0.02)) + 'deg) translateZ(' +
+                    img.length * 20 + 'px)';
+            }
+        }
+    }
+    //................................................
+    document.body.onmouseup = function () {
+        var rotatey = [];
+        document.body.onmousemove = null;
+        clearInterval(id);
+        for (var j = 0; j < img.length; j++) {
+            //正则取值；
+            //console.log(img[j].style.transform);
+            //字符串切割;
+            var str = img[j].style.transform;
+            var str1 = str.split("rotateY(");
+            var str2 = str1[1].split(" ");
+            rotatey[j] = parseInt(str2[0]);
+        }
+        //console.log(rotatey);
+        var x = 0;
+        id = setInterval(function () {
+            for (var i = 0; i < img.length; i++) {
+                img[i].style = 'transform : rotateY(' + ((rotatey[i]) + ((x++) * 0.02)) +
+                    'deg) translateZ(' + img.length * 20 + 'px)';
+            }
+        }, 30);
+        arr = [];
+    }
+    //。。。。。。。。。。。。。。。。。。
+    //牌堆;
+    $(function () {
+        for (var i = 0; i < 5; i++) {
+            $("#paidui").append("<div class=pai><img class=p3 index=" + i + " src='./库洛牌/" + (15 + i) +
+                ".jpg'></img></div>");
+        }
+        $('.pai').eq(4).css('height', '355');
+        $('.pai').mouseenter(function () {
+            $(this).stop().animate({
+                height: 355
+            }).siblings('div').stop().animate({
+                height: 35
+            },function(){
+                $('.pai').eq(4).css('height', '355');                                                                             
+            });
+           
+        });
+        $('#paidui').mouseleave(function () {
+            $('.pai').css('height', '35');
+            $('.pai').eq(4).css('height', '355');
+        });
+    })
+</script>
+
+</html>
